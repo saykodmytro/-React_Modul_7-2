@@ -12,7 +12,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <ModalContextProvider>
-    <BrowserRouter basename="/React_Modul_7-1">
+    <BrowserRouter basename="/React_Modul_7-2">
       <Provider store={store}>
         <PersistGate persistor={persistor}>
           <App />

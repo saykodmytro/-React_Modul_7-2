@@ -4,17 +4,19 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   products: JSON.parse(localStorage.getItem('products')) ?? productsData, // [{}, {}, ...]
+  isLoading: false,
+  error: null,
+  filterTerm: '',
 };
 
 const productsSlice = createSlice({
-  // Ім'я слайсу
   name: 'products',
-  // Початковий стан редюсера слайсу
   initialState: initialState,
-  // Об'єкт редюсерів
   reducers: {
+    setFilterTerm(state, { payload }) {
+      state.filterTerm = payload;
+    },
     addProduct(state, { payload }) {
-      // state.products = [...state.products, payload];
       state.products.push(payload);
     },
     deleteProduct(state, { payload }) {
@@ -24,6 +26,7 @@ const productsSlice = createSlice({
 });
 
 // Генератори екшенів
-export const { addProduct, deleteProduct } = productsSlice.actions;
+export const { addProduct, deleteProduct, setFilterTerm } =
+  productsSlice.actions;
 // Редюсер слайсу
 export const productsReducer = productsSlice.reducer;

@@ -1,4 +1,3 @@
-// import { useEffect } from 'react';
 import { nanoid } from 'nanoid';
 import { Product, ProductForm, Section } from 'components';
 import Modal from 'components/Modal/Modal';
@@ -6,18 +5,22 @@ import Modal from 'components/Modal/Modal';
 import css from 'components/App.module.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { addProduct, deleteProduct } from 'redux/products/products.reducer';
+import Filter from 'components/Filter/Filter';
+import {
+  selectProducts,
+  selectFilteredProducts,
+} from 'redux/products/products.selectors';
+import { selectIsOpenModal } from 'redux/modal/modal.selector';
+import { useState } from 'react';
 
 const ProductsPage = () => {
   const dispatch = useDispatch();
+  const [counter, setCounter] = useState(0);
+  const isOpenModal = useSelector(selectIsOpenModal);
 
-  const isOpenModal = useSelector(state => state.modal.isOpenModal);
-
-  const products = useSelector(state => state.productsStore.products);
-
-  // useEffect(() => {
-  //   const stringifiedProducts = JSON.stringify(products);
-  //   localStorage.setItem('products', stringifiedProducts);
-  // }, [products]);
+  const products = useSelector(selectProducts);
+  // const filterTerm = useSelector(selectProductsFilterTerm);
+  const filteredProducts = useSelector(selectFilteredProducts);
 
   const handleDeleteProduct = productId => {
     dispatch(deleteProduct(productId));
@@ -41,12 +44,31 @@ const ProductsPage = () => {
     dispatch(addProduct(finalProduct));
   };
 
-  const sortedProducts = [...products].sort((a, b) => b.discount - a.discount);
+  // const filteredProducts = useMemo(() => {
+  //   for (let i = 0; i < 3_000_000_000; i++) {}
+  //   return products.filter(
+  //     ({ price, title }) =>
+  //       title.toLowerCase().includes(filterTerm.toLowerCase().trim()) ||
+  //       price.toString().includes(filterTerm.toLowerCase().trim())
+  //   );
+  // }, [filterTerm, products]);
+
+  const sortedProducts = [...filteredProducts].sort(
+    (a, b) => b.discount - a.discount
+  );
   return (
     <div>
       <Section title="Add product Form">
         <ProductForm handleAddProduct={handleAddProduct} />
       </Section>
+
+      <Section title="Filter Product">
+        <Filter />
+      </Section>
+
+      <button onClick={() => setCounter(prev => prev + 1)}>
+        Counter: {counter}
+      </button>
 
       <Section title="Product List">
         <div className={css.productList}>
